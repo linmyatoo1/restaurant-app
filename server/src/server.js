@@ -52,6 +52,15 @@ const io = new Server(httpServer, {
 // Pass the 'io' instance to your socket handler
 initializeSocket(io);
 
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  app.use(express.static(path.join(__dirname, '../../client/build')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
+  });
+}
+
 // --- Start Server ---
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
